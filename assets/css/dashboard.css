@@ -1,0 +1,91 @@
+/*
+ * Bionic Uptime dashboard widget.
+ * Every status is a shape plus words. The shapes match the Bionic Uptime app:
+ * online = filled circle, down = diamond, checking/uncertain/delayed = ring,
+ * paused = two bars, stopped = filled square, unknown or error = hollow square.
+ */
+
+.bionic-uptime-widget p {
+	margin: 0 0 8px;
+}
+
+.bionic-uptime-widget p:last-child {
+	margin-bottom: 0;
+}
+
+.bionic-uptime-status {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.bionic-uptime-shape {
+	display: inline-block;
+	flex: 0 0 auto;
+	box-sizing: border-box;
+	width: 10px;
+	height: 10px;
+}
+
+.bionic-uptime-detail,
+.bionic-uptime-meta,
+.bionic-uptime-quiet {
+	color: #6e6e73;
+}
+
+/* Online: green filled circle. */
+.bionic-uptime-look-online .bionic-uptime-label {
+	color: #1e7b3a;
+}
+
+.bionic-uptime-look-online .bionic-uptime-shape {
+	border-radius: 50%;
+	background: #1e7b3a;
+}
+
+/* Down: red diamond. */
+.bionic-uptime-look-down .bionic-uptime-label {
+	color: #b42318;
+}
+
+.bionic-uptime-look-down .bionic-uptime-shape {
+	width: 9px;
+	height: 9px;
+	margin: 0 1px;
+	background: #b42318;
+	transform: rotate(45deg);
+}
+
+/* Checking, uncertain, delayed: amber ring. */
+.bionic-uptime-look-amber .bionic-uptime-label {
+	color: #8a5300;
+}
+
+.bionic-uptime-look-amber .bionic-uptime-shape {
+	border: 2.5px solid #8a5300;
+	border-radius: 50%;
+}
+
+/* Paused: two grey bars. */
+.bionic-uptime-look-paused .bionic-uptime-label,
+.bionic-uptime-look-stopped .bionic-uptime-label,
+.bionic-uptime-look-neutral .bionic-uptime-label {
+	color: #6e6e73;
+}
+
+.bionic-uptime-look-paused .bionic-uptime-shape {
+	border-left: 3px solid #6e6e73;
+	border-right: 3px solid #6e6e73;
+}
+
+/* Stopped: grey filled square. */
+.bionic-uptime-look-stopped .bionic-uptime-shape {
+	background: #6e6e73;
+}
+
+/* Unknown state or no answer: grey hollow square. Never green. */
+.bionic-uptime-look-neutral .bionic-uptime-shape {
+	border: 2px solid #6e6e73;
+}
