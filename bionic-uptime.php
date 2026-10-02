@@ -3,7 +3,7 @@
  * Plugin Name:       Bionic Uptime
  * Plugin URI:        https://bionicuptime.com/wordpress
  * Description:       Shows this site's status from Bionic Uptime on your dashboard. Bionic Uptime checks the site from outside every 60 seconds and emails you when it is down.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Bionic Uptime
@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BIONIC_UPTIME_VERSION', '1.0.0' );
+define( 'BIONIC_UPTIME_VERSION', '1.0.1' );
 define( 'BIONIC_UPTIME_FILE', __FILE__ );
 define( 'BIONIC_UPTIME_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BIONIC_UPTIME_URL', plugin_dir_url( __FILE__ ) );

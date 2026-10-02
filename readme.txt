@@ -4,7 +4,7 @@ Tags: uptime, monitoring, downtime, status, alerts
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ This plugin puts that status on your WordPress dashboard. It shows the status in
 
 The plugin only reads. The key you paste in lets it read the status of this one website. It cannot change anything in your Bionic Uptime account.
 
-One website is free forever. No card needed. Monitoring more than one website needs the Portfolio plan ($12 a month for up to 20). Get a key at [bionicuptime.com/wordpress](https://bionicuptime.com/wordpress).
+3 websites are free forever. No card needed. Monitoring more than 3 websites needs the Portfolio plan ($12 a month for up to 20). Get a key at [bionicuptime.com/wordpress](https://bionicuptime.com/wordpress).
 
 What the widget will never do:
 
@@ -70,7 +70,7 @@ It removes the saved key and the cached status from your database.
 
 This plugin connects to the Bionic Uptime API at bionicuptime.com to read the status of your website. Without it, the plugin has nothing to show.
 
-* What is sent: the key you saved, and your site's address as part of the User-Agent (for example `BionicUptimeWP/1.0.0; https://example.com`).
+* What is sent: the key you saved, and your site's address as part of the User-Agent (for example `BionicUptimeWP/1.0.1; https://example.com`).
 * When: only after an administrator has saved a key, and only when an administrator opens the dashboard. At most once a minute. Nothing is sent from the public side of your site.
 * Where: `https://bionicuptime.com/api/v1/status`
 
@@ -78,10 +78,16 @@ The service is operated by Bionics LLC (Bionic Uptime). [Terms of service](https
 
 == Changelog ==
 
+= 1.0.1 =
+* The free plan now covers 3 websites; the settings page says so.
+
 = 1.0.0 =
 * First release.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Wording only: the free plan now covers 3 websites.
 
 = 1.0.0 =
 First release.

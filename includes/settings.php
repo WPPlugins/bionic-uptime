@@ -137,7 +137,7 @@ function bionic_uptime_render_settings_page() {
 		<p><?php esc_html_e( 'Bionic Uptime checks this site from outside every 60 seconds, from two locations on two different networks, and emails you when it is down. The key only lets this plugin read this one website\'s status. It cannot change anything.', 'bionic-uptime' ); ?></p>
 
 		<p>
-			<?php esc_html_e( 'One website is free forever. No card needed.', 'bionic-uptime' ); ?>
+			<?php esc_html_e( '3 websites are free forever. No card needed.', 'bionic-uptime' ); ?>
 			<a href="https://bionicuptime.com/wordpress" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Get a free key', 'bionic-uptime' ); ?></a>
 		</p>
 
