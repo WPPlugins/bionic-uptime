@@ -4,7 +4,8 @@
  *
  * Rule for this file: the words and the colour both come from what the API
  * said. Green is used only when the API said state "online" in a response no
- * older than the cache window. Anything we do not know is grey.
+ * older than about two minutes; the script greys out anything older. Anything we do
+ * not know is grey.
  *
  * @package BionicUptime
  */
@@ -31,7 +32,7 @@ function bionic_uptime_add_dashboard_widget() {
 }
 
 /**
- * Load the widget's small stylesheet on the dashboard only.
+ * Load the widget's stylesheet and refresh script on the dashboard only.
  *
  * @param string $hook_suffix Current admin page.
  */
@@ -44,6 +45,22 @@ function bionic_uptime_enqueue_dashboard_css( $hook_suffix ) {
 		BIONIC_UPTIME_URL . 'assets/css/dashboard.css',
 		array(),
 		BIONIC_UPTIME_VERSION
+	);
+	wp_enqueue_script(
+		'bionic-uptime-dashboard',
+		BIONIC_UPTIME_URL . 'assets/js/dashboard.js',
+		array( 'wp-a11y', 'wp-i18n' ),
+		BIONIC_UPTIME_VERSION,
+		true
+	);
+	wp_set_script_translations( 'bionic-uptime-dashboard', 'bionic-uptime' );
+	wp_localize_script(
+		'bionic-uptime-dashboard',
+		'bionicUptimeWidget',
+		array(
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'nonce'   => wp_create_nonce( 'bionic_uptime_widget' ),
+		)
 	);
 }
 
@@ -90,16 +107,65 @@ function bionic_uptime_print_status( $look, $label ) {
 
 /**
  * Render the widget.
+ *
+ * The widget refreshes itself (assets/js/dashboard.js), because a dashboard is
+ * often left open for hours, and a status drawn once would go on saying
+ * "Online" long after anyone knew it. The data attributes tell the script how
+ * old this answer already is and whether there is a status to keep fresh.
  */
 function bionic_uptime_render_dashboard_widget() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
 
-	$status = bionic_uptime_get_status();
+	$entry = bionic_uptime_get_status_entry();
 
-	echo '<div class="bionic-uptime-widget">';
+	printf(
+		'<div class="bionic-uptime-widget" id="bionic-uptime-widget" data-refresh="%s" data-age="%d" data-said="%s">',
+		esc_attr( 'no_key' === $entry['result']['kind'] ? '0' : '1' ),
+		(int) bionic_uptime_answer_age( $entry ),
+		esc_attr( bionic_uptime_said( $entry['result'] ) )
+	);
+	bionic_uptime_print_widget_body( $entry['result'] );
+	echo '</div>';
+}
 
+/**
+ * Seconds since the API gave this answer. Never negative.
+ *
+ * @param array $entry From bionic_uptime_get_status_entry().
+ * @return int
+ */
+function bionic_uptime_answer_age( $entry ) {
+	return max( 0, time() - (int) $entry['fetched_at'] );
+}
+
+/**
+ * The words a status change is announced with, or '' for no status.
+ * The script announces only when this changes, so a refresh that finds the
+ * same status says nothing.
+ *
+ * @param array $status From bionic_uptime_get_status().
+ * @return string
+ */
+function bionic_uptime_said( $status ) {
+	if ( 'ok' === $status['kind'] ) {
+		return $status['label'];
+	}
+	if ( 'no_key' === $status['kind'] ) {
+		return '';
+	}
+	return 'unauthorized' === $status['kind']
+		? __( 'This key is not recognised.', 'bionic-uptime' )
+		: __( 'Could not reach Bionic Uptime', 'bionic-uptime' );
+}
+
+/**
+ * The widget's insides, for the dashboard and for the refresh.
+ *
+ * @param array $status From bionic_uptime_get_status().
+ */
+function bionic_uptime_print_widget_body( $status ) {
 	switch ( $status['kind'] ) {
 		case 'no_key':
 			?>
@@ -174,6 +240,28 @@ function bionic_uptime_render_dashboard_widget() {
 			<?php
 			break;
 	}
+}
 
-	echo '</div>';
+add_action( 'wp_ajax_bionic_uptime_widget', 'bionic_uptime_ajax_widget' );
+
+/**
+ * The widget's refresh: the same insides, built the same way, with the age of
+ * the answer. Administrators only, with the dashboard's nonce.
+ */
+function bionic_uptime_ajax_widget() {
+	check_ajax_referer( 'bionic_uptime_widget', 'nonce' );
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( null, 403 );
+	}
+
+	$entry = bionic_uptime_get_status_entry();
+	ob_start();
+	bionic_uptime_print_widget_body( $entry['result'] );
+	wp_send_json_success(
+		array(
+			'html' => ob_get_clean(),
+			'age'  => bionic_uptime_answer_age( $entry ),
+			'said' => bionic_uptime_said( $entry['result'] ),
+		)
+	);
 }

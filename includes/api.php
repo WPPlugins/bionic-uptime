@@ -3,8 +3,9 @@
  * Talking to the Bionic Uptime status API.
  *
  * The only outbound request this plugin makes lives in this file. It runs
- * only after an administrator has saved a key, and only when an
- * administrator opens the dashboard.
+ * only after an administrator has saved a key, and only while an
+ * administrator has the dashboard open: when it loads, and as the widget
+ * refreshes itself. Never more than once a minute, because of the cache.
  *
  * @package BionicUptime
  */
@@ -58,9 +59,25 @@ function bionic_uptime_key_fingerprint( $key ) {
 }
 
 /**
- * The status for the saved key, from the 60-second cache or from the API.
+ * The status for the saved key. See bionic_uptime_get_status_entry().
  *
- * Always returns an array with a 'kind' of:
+ * @return array
+ */
+function bionic_uptime_get_status() {
+	$entry = bionic_uptime_get_status_entry();
+	return $entry['result'];
+}
+
+/**
+ * The status for the saved key, from the 60-second cache or from the API,
+ * with the time the API was asked.
+ *
+ * The time matters because the cache can hand back an answer up to a minute
+ * old, and a dashboard left open must know how old what it shows really is.
+ *
+ * Returns array( 'result' => see below, 'fetched_at' => Unix time ).
+ *
+ * 'result' always has a 'kind' of:
  * - 'no_key'       nothing saved; no request is made.
  * - 'ok'           the API answered; 'state', 'label', 'detail', 'checked_at', 'details_url'.
  * - 'unauthorized' the API did not recognise the key.
@@ -69,10 +86,13 @@ function bionic_uptime_key_fingerprint( $key ) {
  *
  * @return array
  */
-function bionic_uptime_get_status() {
+function bionic_uptime_get_status_entry() {
 	$key = bionic_uptime_get_key();
 	if ( '' === $key ) {
-		return array( 'kind' => 'no_key' );
+		return array(
+			'result'     => array( 'kind' => 'no_key' ),
+			'fetched_at' => time(),
+		);
 	}
 
 	$fingerprint = bionic_uptime_key_fingerprint( $key );
@@ -91,22 +111,29 @@ function bionic_uptime_get_status() {
 		&& ( time() - $cached['fetched_at'] ) < BIONIC_UPTIME_CACHE_SECONDS
 		&& is_array( $cached['result'] )
 	) {
-		return $cached['result'];
+		return array(
+			'result'     => $cached['result'],
+			'fetched_at' => $cached['fetched_at'],
+		);
 	}
 
-	$result = bionic_uptime_fetch_status( $key );
+	$result     = bionic_uptime_fetch_status( $key );
+	$fetched_at = time();
 
 	set_transient(
 		BIONIC_UPTIME_TRANSIENT,
 		array(
 			'fingerprint' => $fingerprint,
-			'fetched_at'  => time(),
+			'fetched_at'  => $fetched_at,
 			'result'      => $result,
 		),
 		BIONIC_UPTIME_CACHE_SECONDS
 	);
 
-	return $result;
+	return array(
+		'result'     => $result,
+		'fetched_at' => $fetched_at,
+	);
 }
 
 /**

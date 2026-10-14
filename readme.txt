@@ -4,7 +4,7 @@ Tags: uptime, monitoring, downtime, status, alerts
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,7 @@ The plugin only reads. The key you paste in lets it read the status of this one 
 
 What the widget will never do:
 
-* Show "Online" unless Bionic Uptime said so in the last minute.
+* Show "Online" from an answer more than about two minutes old. Left open, the dashboard refreshes the widget every 30 seconds, and if it cannot, the widget stops showing a status and says so.
 * Guess. If the plugin cannot reach Bionic Uptime, it says so in grey. It does not show the last good status.
 * Rely on colour alone. Every status has a shape and words.
 
@@ -43,7 +43,7 @@ A plugin goes down with the site. When the site is down, the plugin is down too,
 
 = Does it slow my site? =
 
-No. The plugin makes no calls on the public side of your site. It only asks Bionic Uptime for the status when an administrator opens the dashboard, and at most once a minute.
+No. The plugin makes no calls on the public side of your site. It only asks Bionic Uptime for the status while an administrator has the dashboard open, and at most once a minute.
 
 = What does it catch? =
 
@@ -70,13 +70,16 @@ It removes the saved key and the cached status from your database.
 
 This plugin connects to the Bionic Uptime API at bionicuptime.com to read the status of your website. Without it, the plugin has nothing to show.
 
-* What is sent: the key you saved, and your site's address as part of the User-Agent (for example `BionicUptimeWP/1.0.1; https://example.com`).
-* When: only after an administrator has saved a key, and only when an administrator opens the dashboard. At most once a minute. Nothing is sent from the public side of your site.
+* What is sent: the key you saved, and your site's address as part of the User-Agent (for example `BionicUptimeWP/1.0.2; https://example.com`).
+* When: only after an administrator has saved a key, and only while an administrator has the dashboard open (when it loads, and as the widget refreshes itself). At most once a minute. Nothing is sent from the public side of your site.
 * Where: `https://bionicuptime.com/api/v1/status`
 
 The service is operated by Bionics LLC (Bionic Uptime). [Terms of service](https://bionicuptime.com/terms). [Privacy policy](https://bionicuptime.com/privacy).
 
 == Changelog ==
+
+= 1.0.2 =
+* A dashboard left open no longer goes on showing the status it loaded with. The widget refreshes itself every 30 seconds, and once what it shows is over about two minutes old it stops showing a status and says so. A collapsed or hidden widget does not refresh until it is shown again.
 
 = 1.0.1 =
 * The free plan now covers 3 websites; the settings page says so.
@@ -85,6 +88,9 @@ The service is operated by Bionics LLC (Bionic Uptime). [Terms of service](https
 * First release.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+A dashboard left open could go on showing "Online" after it stopped being true. The widget now refreshes itself.
 
 = 1.0.1 =
 Wording only: the free plan now covers 3 websites.
