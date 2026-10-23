@@ -1,14 +1,14 @@
-=== Bionic Uptime ===
+=== Bionic Uptime – Uptime Monitor and Downtime Alerts ===
 Contributors: bionicuptime
-Tags: uptime, monitoring, downtime, status, alerts
+Tags: uptime, uptime monitor, downtime, monitoring, alerts
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-See your site's Bionic Uptime status on the dashboard. Checked from outside every 60 seconds; you get an email when it is down.
+Free uptime monitor with downtime alerts. Your site is checked from outside every 60 seconds, and you get one email when it is down.
 
 == Description ==
 
@@ -70,13 +70,16 @@ It removes the saved key and the cached status from your database.
 
 This plugin connects to the Bionic Uptime API at bionicuptime.com to read the status of your website. Without it, the plugin has nothing to show.
 
-* What is sent: the key you saved, and your site's address as part of the User-Agent (for example `BionicUptimeWP/1.0.2; https://example.com`).
+* What is sent: the key you saved, and your site's address as part of the User-Agent (for example `BionicUptimeWP/1.0.3; https://example.com`).
 * When: only after an administrator has saved a key, and only while an administrator has the dashboard open (when it loads, and as the widget refreshes itself). At most once a minute. Nothing is sent from the public side of your site.
 * Where: `https://bionicuptime.com/api/v1/status`
 
 The service is operated by Bionics LLC (Bionic Uptime). [Terms of service](https://bionicuptime.com/terms). [Privacy policy](https://bionicuptime.com/privacy).
 
 == Changelog ==
+
+= 1.0.3 =
+* The plugin's listed name now says what it does. No code changes.
 
 = 1.0.2 =
 * A dashboard left open no longer goes on showing the status it loaded with. The widget refreshes itself every 30 seconds, and once what it shows is over about two minutes old it stops showing a status and says so. A collapsed or hidden widget does not refresh until it is shown again.
@@ -88,6 +91,9 @@ The service is operated by Bionics LLC (Bionic Uptime). [Terms of service](https
 * First release.
 
 == Upgrade Notice ==
+
+= 1.0.3 =
+Name only. Nothing in the plugin changed.
 
 = 1.0.2 =
 A dashboard left open could go on showing "Online" after it stopped being true. The widget now refreshes itself.
