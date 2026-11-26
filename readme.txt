@@ -2,9 +2,9 @@
 Contributors: bionicuptime
 Tags: uptime, uptime monitor, downtime, monitoring, alerts
 Requires at least: 6.0
-Tested up to: 7.1
+Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,13 +70,16 @@ It removes the saved key and the cached status from your database.
 
 This plugin connects to the Bionic Uptime API at bionicuptime.com to read the status of your website. Without it, the plugin has nothing to show.
 
-* What is sent: the key you saved, and your site's address as part of the User-Agent (for example `BionicUptimeWP/1.0.3; https://example.com`).
+* What is sent: the key you saved, and your site's address as part of the User-Agent (for example `BionicUptimeWP/1.0.4; https://example.com`).
 * When: only after an administrator has saved a key, and only while an administrator has the dashboard open (when it loads, and as the widget refreshes itself). At most once a minute. Nothing is sent from the public side of your site.
 * Where: `https://bionicuptime.com/api/v1/status`
 
 The service is operated by Bionics LLC (Bionic Uptime). [Terms of service](https://bionicuptime.com/terms). [Privacy policy](https://bionicuptime.com/privacy).
 
 == Changelog ==
+
+= 1.0.4 =
+* Tested with WordPress 7.2. No code changes.
 
 = 1.0.3 =
 * The plugin's listed name now says what it does. No code changes.
@@ -91,6 +94,9 @@ The service is operated by Bionics LLC (Bionic Uptime). [Terms of service](https
 * First release.
 
 == Upgrade Notice ==
+
+= 1.0.4 =
+Tested with WordPress 7.2. Nothing in the plugin changed.
 
 = 1.0.3 =
 Name only. Nothing in the plugin changed.
